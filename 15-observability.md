@@ -116,6 +116,8 @@ Backpressure is a direct consequence of Axiom 1 (asynchrony) applied to capacity
 
 **The practical rule:** Start with RED metrics for every service (know if it's healthy). Add tracing for services in the critical request path. Add structured logging for services that handle complex business logic. Add more as needed.
 
+**Under a fixed observability budget:** Metrics first (they're cheapest and cover detection). Tracing second (it requires explicit instrumentation but pays for itself during incidents). Structured logging third (most expensive to store and query at scale, so invest here only after metrics and traces are in place). This ordering maximises coverage per unit of infrastructure cost.
+
 ---
 
 ## Summary

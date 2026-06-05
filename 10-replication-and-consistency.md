@@ -18,6 +18,8 @@ You replicate data for three reasons, each following from the Axioms:
 
 Fault tolerance is the primary reason — it is the direct consequence of Axiom 2. If nodes could not fail, or if losing a node's data were acceptable, replication would be optional. Since nodes fail and data must survive, replication is mandatory.
 
+> **Model reminder:** The discussion of replication in this chapter, and of transactions in Chapter 11, continues to assume the **crash-fault model** introduced in Chapter 7 — nodes may stop responding but they will not lie, forge messages, or collude. This assumption is the foundation of all the consistency guarantees and replication strategies described here. The Byzantine case (where nodes can behave maliciously) is examined in Chapter 17, and nearly everything in Chapters 10–11 would need re-examination under that model.
+
 ---
 
 ## 10.2 Consistency Models

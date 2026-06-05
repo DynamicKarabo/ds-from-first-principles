@@ -61,23 +61,21 @@ The phi-accrual failure detector, introduced by Naohiro Hayashibara et al. in 20
 3. When a heartbeat is overdue by time `t`, compute the **suspicion level** φ:
 
 ```
-φ = -log₂(P(later than t | alive))
+φ = -log₁₀(P(later than t | alive))
 ```
 
-This is the negative log (base 2) of the probability that a heartbeat would arrive more than `t` time units after the expected time, *assuming the node is alive*.
-
-4. A high φ means the observed delay is very unlikely under the "node is alive" hypothesis — so we should suspect the node is dead. A low φ means the delay is within normal variance — the node is probably alive.
+This is the negative log (base 10) of the probability that a heartbeat would arrive more than `t` time units after the expected time, *assuming the node is alive*. Base 10 means each unit of φ represents one order of magnitude: φ = 1 means roughly 10% chance of being wrong to declare the node dead, φ = 2 means ~1%, φ = 3 means ~0.1%, and so on.
 
 **Interpretation of φ values:**
 
-| φ | Probability heartbeat arrives this late if node is alive | Interpretation |
-|---|--------------------------------------------------------|----------------|
-| 0 | 50% | Normal variance |
+| φ | Probability of being wrong to declare dead | Interpretation |
+|---|-------------------------------------------|----------------|
+| 0 | 100% | No evidence — normal variance |
 | 1 | ~10% | Mildly suspicious |
 | 2 | ~1% | Suspicious |
 | 3 | ~0.1% | Very suspicious |
-| 5 | ~0.3% | Strong suspicion |
-| 8 | ~0.004% | Effectively certain |
+| 5 | ~0.001% | Strong suspicion |
+| 8 | ~0.000001% | Effectively certain |
 
 A threshold is set (typically φ = 5–8). When φ exceeds the threshold, the node is declared dead. But the detector never reaches 100% certainty — it only crosses a threshold.
 

@@ -119,6 +119,8 @@ The insight: the log is a single idea that appears across consensus, replication
 
 The choice is workload-dependent. Applications that need high write throughput, temporal queries, and multiple consumers benefit from log-based architecture. Applications that need low-latency point reads and complex queries benefit from traditional databases. The two are increasingly combined — CDC (Change Data Capture) pipes database changes into a log-based streaming system, giving you both fresh state and temporal capabilities.
 
+**Sharpening the decision:** Event sourcing is frequently over-applied. Use it when you genuinely need temporal queries (audit logs, compliance, state reconstruction at any point) or multiple divergent projections from the same event stream. Avoid it when your primary workload is point reads of current state — a traditional database with a CDC pipeline to a streaming system handles both cases without forcing event sourcing's replay complexity on every query.
+
 ---
 
 ## Summary

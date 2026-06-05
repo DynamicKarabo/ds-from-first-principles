@@ -116,7 +116,21 @@ Each question maps directly to one of the three axioms:
 
 ---
 
-## 4.8 Design-Space Beat
+## 4.8 A Note on RPC Semantics
+
+Since all distributed systems communication is by messages, the semantics of sending and receiving messages matter. A **remote procedure call (RPC)** is the distributed analogue of a function call — one machine requests that another machine perform an operation and return a result. But an RPC is *not* a function call, because the network sits between caller and callee:
+
+- **At-most-once semantics:** The caller sends the request once. If no response arrives within a timeout, the caller may try again or give up. Simple, but the caller cannot distinguish "the callee never received the request" from "the callee processed it but the response was lost."
+
+- **At-least-once semantics:** The caller retries on timeout until it receives a response. Guarantees the request is processed at least once, but the callee may process it multiple times (duplicate execution). The caller must handle duplicates idempotently (see Chapter 11).
+
+- **Exactly-once semantics:** The caller sends exactly once and the callee processes exactly once. This is the ideal but requires deduplication, idempotency checks, and often consensus — it is expensive and only justified for operations where duplication has material consequences (payments, inventory decrements).
+
+These semantics follow directly from Axiom 1 (asynchrony — you cannot distinguish a lost message from a delayed one), which forces the caller to make a choice on timeout: retry (risking duplicates) or give up (risking the operation never happening). This choice is the root of the exactly-once problems discussed in Chapters 10 and 11.
+
+---
+
+## 4.9 Design-Space Beat
 
 There is no alternative to addressing the distribution problem if you need more capacity or reliability than one machine provides. The only alternative is to stay with a single machine — which is the right choice for many workloads.
 

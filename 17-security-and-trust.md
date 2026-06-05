@@ -1,8 +1,8 @@
-# Chapter 17: Security and Trust
+# Chapter 17: Byzantine Fault Tolerance and Trust Models
 
 Every previous chapter assumed nodes that follow the protocol honestly. They may crash, they may be slow, they may be partitioned — but they do not lie, they do not collude, and they do not send conflicting messages to different peers.
 
-This chapter examines what happens when this assumption is removed.
+This chapter examines what happens when this assumption is removed. **Note on scope:** This chapter covers the Byzantine failure dimension of trust — what changes when nodes can behave maliciously. It does not attempt to cover the full breadth of distributed systems security (authentication, authorization, secure channels, key distribution, supply-chain attacks). Those are essential operational concerns but are beyond the scope of a first-principles treatment of distributed systems concepts.
 
 ---
 

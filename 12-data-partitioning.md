@@ -110,7 +110,12 @@ Even with perfect partitioning, some nodes may receive disproportionate load:
 | Fixed partitions | Simple, predictable | Partitions may grow unevenly | Kafka (topic partitions) |
 | Directory-based | Maximum flexibility | Directory is bottleneck/SPOF | Netflix Eureka |
 
-The choice depends on your query pattern. If range queries are common (scanning records by date), range partitioning wins. If point lookups dominate (read/write by user ID), consistent hashing wins. If you need maximum flexibility and can tolerate the directory overhead, directory-based partitioning works.
+The choice depends on your query pattern:
+
+- **Choose consistent hashing** when your primary access pattern is point lookups by key (read/write by user ID, order ID, session token). It minimises rebalancing and handles heterogeneous capacity well via virtual nodes.
+- **Choose range partitioning** when you frequently scan contiguous key ranges (time-series queries, paginated search results, reporting over date ranges). The efficient range scans justify the hot-spot risk and rebalancing cost.
+- **Choose directory-based partitioning** when you need maximum placement flexibility — moving data between nodes arbitrarily — and can tolerate an additional lookup hop and the directory becoming a coordination challenge.
+- **Avoid naive hashing** in any system that will grow or shrink. The 90% reshuffle cost on resize makes it suitable only for fixed-size clusters.
 
 ---
 

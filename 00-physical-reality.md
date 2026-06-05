@@ -129,7 +129,7 @@ This is the source of the FLP impossibility result (Chapter 7) — in an asynchr
 
 Components fail independently, and failure is partial — some components fail while others remain healthy. One node dying tells you nothing about whether another has died. The network can partition, leaving both sides running and neither aware of the other.
 
-This follows from entropy (Fact 2). Independence is an idealising assumption — the course interrogates it explicitly when discussing correlated failures (shared power, shared switches, shared bugs, shared deploys).
+This follows from entropy (Fact 2). Independence is an idealising assumption — the course interrogates it in Chapter 4 (correlated failures from shared power, shared switches, shared bugs, shared deploys).
 
 This is the source of the CAP theorem (Chapter 9) — during a network partition, you cannot simultaneously maintain consistency and availability.
 

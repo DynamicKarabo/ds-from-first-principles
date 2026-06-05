@@ -75,9 +75,11 @@ TLA+ (Temporal Logic of Actions) is a formal specification language for describi
 A TLA+ model checker (TLC) explores all reachable states of the specification and checks whether the safety and liveness properties hold. If the model checker finds a violation, it produces an **error trace** — the exact sequence of states that leads to the violation.
 
 **What TLA+ provides that testing cannot:**
-- **Exhaustive state exploration.** The model checker tests *every* reachable state, within the bounds of the model.
-- **Safety verification.** If the spec says "committed entries are never lost," the model checker proves there is no reachable state where a committed entry is absent.
+- **Bounded model checking.** The TLC model checker tests *every* reachable state of a bounded finite-state instance of the specification. If it finds a violation, the spec is definitely flawed. Finding no violations within the explored bounds increases confidence but does not prove correctness for all possible states. (The TLAPS proof system can prove unbounded properties, but this requires manual theorem proving and is not the same as automated model checking.)
+- **Safety verification within bounds.** If a specific property fails, TLC produces an error trace showing exactly how it fails.
 - **Design-time debugging.** TLA+ finds design flaws before a single line of implementation code is written.
+
+**Important caveat:** TLA+ proves properties about a *specification*, not about the implementation. A correct spec does not guarantee correct code — the implementation may deviate from the spec, contain bugs, or face conditions the spec didn't model (network behaviour, timing, memory corruption). Finding no counterexample at bound N is not a proof for all N.
 
 **Practical use:** Amazon, Microsoft, and other companies use TLA+ to verify critical distributed systems. Amazon's DynamoDB, S3, and EBS have been verified with TLA+. The typical pattern: write a TLA+ spec for the consensus protocol, verify correctness, then implement the protocol in code following the spec.
 
@@ -127,11 +129,15 @@ All three together = confidence. Neither alone is sufficient. Presenting chaos a
 
 The verification budget is limited. Spending time on TLA+ means less time on chaos testing, and vice versa. The right allocation depends on the cost of being wrong:
 
-- **Safety-critical systems** (distributed consensus, financial ledgers, access control): invest heavily in TLA+. A safety violation in these systems is catastrophic. Chaos testing alone is insufficient.
+- **Chaos first, always.** Run chaos experiments from day one — they are cheap, catch operational gaps early, and build the muscle of thinking about failure modes. Even safety-critical projects start here before moving to formal methods.
 
-- **Performance-critical systems** (CDN, caching, data pipeline): invest in chaos engineering. Liveness and performance under failure matter more than edge-case correctness. TLA+ is overkill for a cache that can tolerate staleness.
+- **Jepsen when you ship a consistency guarantee.** If your system claims linearizability, serializability, or any specific consistency model, Jepsen is the appropriate next step — it tests the implementation against that claim under fault injection.
 
-- **New protocol implementations** (custom Raft variant, new replication protocol): both. TLA+ for the spec, chaos testing for the implementation, Jepsen for verification.
+- **TLA+ when a design flaw would be catastrophic and expensive to find late.** Consensus protocols, replication schemes, and distributed transaction logic are the right candidates. The investment (learning TLA+, writing the spec, model checking) is justified only when the cost of a design-level bug is extreme.
+
+- **Safety-critical systems** (distributed consensus, financial ledgers, access control): invest in TLA+ and Jepsen, with chaos in the background.
+- **Performance-critical systems** (CDN, caching, data pipeline): invest in chaos engineering. TLA+ is overkill for a system that can tolerate staleness.
+- **New protocol implementations** (custom Raft variant, new replication protocol): all three. TLA+ for the spec, chaos testing for the implementation, Jepsen for verification.
 
 ---
 

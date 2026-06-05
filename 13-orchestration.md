@@ -142,6 +142,15 @@ For the tradeoff to be worth it, the workload must benefit from the features tha
 
 A single-container workload on a single node gains nothing from Kubernetes and pays the full complexity cost.
 
+**Design-space beat — when not to use Kubernetes:**
+- **Single service, single node** — Docker Compose is simpler, faster to set up, and requires no control plane.
+- **Small team (< 5 engineers)** — the operational overhead of managing a K8s cluster may exceed the value of its features.
+- **Serverless-suitable workloads** — if your app is stateless and event-driven, a serverless platform may be cheaper and simpler than running K8s.
+- **Edge/constrained deployments** — a full K8s control plane may not fit on edge hardware; lightweight alternatives (K3s, Nomad) or no orchestrator may be appropriate.
+- **High-throughput, latency-critical workloads** — the K8s networking stack (kube-proxy, CNI overhead, API server) adds latency that some systems cannot afford. DPDK/SPDK userspace networking or bare metal may be necessary.
+
+The right question is not "should we use Kubernetes?" but "do we have a problem that Kubernetes solves, and would we pay its complexity cost to get that solution?"
+
 ---
 
 ## 13.4 Derivation Caveat
@@ -163,7 +172,7 @@ Each was a reasonable design point. Kubernetes's design won for the reasons abov
 |-----------|-----------|---------------|
 | etcd | Consensus (L7), The Log (L8) | Agreement on desired state |
 | API server | Single authority (L4) | One front door for state changes |
-| Controller manager | Reconciliation (L10) | Continuous desired-vs-actual correction |
+| Controller manager | State convergence (L10 — reconciliation toward declared state, akin to ensuring eventual consistency) | Continuous desired-vs-actual correction |
 | Scheduler | Bin-packing (L12) | Workload placement under uncertainty |
 | kubelet | Failure detection (L6) | Node-level agent and health monitor |
 | Container runtime | Containers (L3) | Namespaces, cgroups, execution |

@@ -22,7 +22,7 @@ A client makes a request to a node on one side of the partition. This node has d
 
 The CAP theorem (Brewer 2000, proven by Gilbert and Lynch 2002) states that a distributed system can guarantee at most two of three properties:
 
-- **Consistency (C):** Every read receives the most recent write or an error. All nodes see the same data at the same time (linearizability — see Chapter 10).
+- **Consistency (C):** Every read receives the most recent write or an error. The "C" in CAP specifically means **linearizability** (Chapter 10) — operations appear to take effect atomically at a single point in time, and all nodes agree on the global order of all operations. This is the strongest consistency model; weaker models (sequential, causal, eventual) are discussed in Chapter 10 and do not provide the guarantee CAP refers to.
 
 - **Availability (A):** Every non-failing node responds to every request within a reasonable time. The system does not reject or delay requests.
 
@@ -73,7 +73,7 @@ AP systems do not lose committed data — they serve potentially stale reads. A 
 
 **Misconception 3: "You choose your system's CAP properties once and they are fixed."**
 
-Many systems support configuration along the C/A axis. Cassandra allows tuning read and write consistency levels per-query (`ONE`, `QUORUM`, `ALL`). The same system can be CP for some operations and AP for others. CAP describes a spectrum, not a binary toggle.
+Many systems support configuration along the C/A axis. Cassandra allows tuning read and write consistency levels per-query (`ONE`, `QUORUM`, `ALL`). The same system can be CP for some operations and AP for others. CAP describes a per-operation choice, not a whole-system classification.
 
 **Misconception 4: "CAP is the only tradeoff that matters."**
 

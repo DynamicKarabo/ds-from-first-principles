@@ -237,7 +237,7 @@ Each layer is derived from the problem created by the previous layer. Each layer
 - TLA+ and Jepsen are complementary but NOT co-equal. TLA+ proves a *spec* correct. Jepsen tests an *implementation* for known failure modes. Both are needed. Neither alone is sufficient.
 - **The honest picture:** chaos tests what actually happens, TLA+ proves what *must* happen, Jepsen checks what *did* happen in your specific build. All three together = confidence.
 
-**Layer 17 — Security and Trust**
+**Layer 17 — Byzantine Fault Tolerance and Trust Models**
 - Problem: everything so far assumes nodes follow the protocol honestly. What if they don't?
 - Crash failures vs Byzantine failures: crash = stops responding, Byzantine = may behave arbitrarily (lie, collude, send conflicting messages)
 - Byzantine Fault Tolerance: why it's harder than crash tolerance (N = 3f + 1 vs N = 2f + 1). The additional cost
@@ -277,11 +277,13 @@ This replaces the v1 attempt to use Bayesian reasoning as the universal thread. 
 | 10 (Replication) | Write-path latency vs read-path latency — quorum size tradeoffs | 1 |
 | 10 (Exactly-once) | Idempotency + dedup + atomic commit | 1 |
 | 11 (Transactions) | 2PC vs Sagas — isolation vs availability | 1 |
-| 12 (Partitioning) | Consistent hashing vs range vs directory | 1 |
+| 12 (Partitioning) | Consistent hashing vs range vs directory — crisp decision criteria | 1 |
 | 13 (Orchestration) | Why K8s won [DEEP DIVE] | 2 |
-| 14 (Streaming) | Log-based vs traditional DB vs hybrid | 1 |
-| 15 (Observability) | Tracing vs metrics vs logging triage | 1 |
-| 17 (Security) | Crash-fault vs Byzantine — when must you pay the BFT cost? | 1 |
+| 13 (Orchestration) | When not to use K8s — single service, small team, serverless, edge, latency-critical | 1 |
+| 14 (Streaming) | Log-based vs traditional DB vs hybrid; event sourcing over-application warning | 1 |
+| 15 (Observability) | Tracing vs metrics vs logging triage; what to instrument first under budget | 1 |
+| 16 (Verification) | Chaos first/Jepsen on consistency claim/TLA+ for catastrophic failure | 1 |
+| 17 (BFT) | Crash-fault vs Byzantine — when must you pay the BFT cost? | 1 |
 
 ---
 

@@ -34,6 +34,8 @@ The proof works by constructing a chain of states where, no matter how far the p
 
 FLP is the reason consensus protocols have timeouts. Without timeouts, the system could wait forever. With timeouts, the system sacrifices perfect asynchrony — it assumes that if a node hasn't responded within the timeout, it is probably dead — but gains termination.
 
+> **A note on "deterministic":** The FLP result uses "deterministic" to mean "an algorithm whose behavior is fully determined by its inputs — no randomness." Raft's leader election escapes this by introducing randomization (randomized election timeouts). Meanwhile, when this chapter describes Raft as having "DETERMINISTIC safety" (Section 7.5.3), it means something different: the safety guarantee is non-probabilistic — a committed entry is guaranteed to remain committed, not "probably committed." Same word, two meanings: FLP's "deterministic" refers to the *protocol's operation*; Raft's "deterministic safety" refers to the *guarantee's certainty.* The two are compatible — Raft uses randomization in its operation (escaping FLP) to provide a deterministic guarantee.
+
 ---
 
 ## 7.3 Quorum
@@ -212,7 +214,7 @@ The tradeoff Raft accepted: **leader bottleneck.** All writes must go through th
 | Concept | Key Idea |
 |---------|----------|
 | Consensus problem | N machines must agree on one value despite failures |
-| FLP impossibility | In async systems, consensus cannot be guaranteed in finite time — workaround via timing assumptions |
+| FLP impossibility | In async systems, no deterministic protocol can guarantee consensus in finite time — workaround via timing assumptions |
 | Quorum | Majority (N/2 + 1) ensures at most one group can decide |
 | Crash-fault model | Assumes nodes stop but don't lie. Byzantine case deferred to Ch 17 |
 | Raft | Three sub-problems: leader election, log replication, safety |
